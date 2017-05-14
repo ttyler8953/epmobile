@@ -1,0 +1,25 @@
+{
+  "name": "epmobile",
+  "description": "Emerging Properties, LLC mobile app.",
+  "slug": "epmobile",
+  "privacy": "public",
+  "sdkVersion": "16.0.0",
+  "version": "1.0.0",
+  "orientation": "portrait",
+  "primaryColor": "#cccccc",
+  "icon": "./assets/icons/EPicon.png",
+  "notification": {
+    "icon": "./assets/icons/notification-icon.png",
+    "color": "#000000"
+  },
+  "loading": {
+    "icon": "./assets/icons/EPicon.png",
+    "hideExponentText": false
+  },
+  "packagerOpts": {
+    "assetExts": ["ttf"]
+  },
+  "ios": {
+    "supportsTablet": true
+  }
+}
