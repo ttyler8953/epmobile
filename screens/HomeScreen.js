@@ -5,10 +5,17 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  TouchableHighlight,
   Text,
-  TouchableOpacity,
   View,
-} from 'react-native';
+  Alert,
+} from 'react-native'
+import {
+  StackNavigation,
+  TabNavigation,
+  TabNavigationItem,
+  NavigationProvider,
+} from '@expo/ex-navigation';
 
 import { MonoText } from '../components/StyledText';
 
@@ -34,29 +41,45 @@ export default class HomeScreen extends React.Component {
 
           <View style={styles.getStartedContainer}>
 
-            <Text style={styles.getStartedText}>
-              Emerging Properties LLC
+            <Text style={styles.titleText}>
+              Emerging Properties, LLC {"\n"}
             </Text>
-
+            <Text style={styles.tabBarInfoText}>
+            "ya we do THAT too..."
+            {"\n"}
+            </Text>
+            <Text style={styles.getStartedText}>
+            Emerging Properties, LLC is a localy owned, fully licenced and insured remodeling company located in Lafayette, LA.
+            {"\n"}{"\n"}
+            We take great pride in being conscientious to your living environment.  Improving your home and enriching your life with the best craftmenship.
+            Remodeling does not oly affect your home; it also affects your life and your family.  We help you maximize the potinital of your home.
+            {"\n"}{"\n"}
+            </Text>
+<View style={styles.container}>
+<TouchableHighlight >
             <Image
               source={require('../assets/images/home_blueprint.jpg')}
             />
+  </TouchableHighlight>
+  </View>
+
             <Text style={styles.getStartedText}>
-            We are proud to show you a sample of our work.
-                We have created several galleries for you to view, please feel free to view our work.
+            {"\n"}We are proud to show you a sample of our work.
+            {"\n"}We have created several galleries for you to view, please feel free to view our work.
+            {"\n"}
+            {"\n"}
             </Text>
+
+
           </View>
         </ScrollView>
 
-        <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>
-          "ya we do THAT too..."
-          </Text>
-        </View>
+
       </View>
     );
   }
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -99,15 +122,21 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     paddingHorizontal: 4,
   },
-  getStartedText: {
-    fontSize: 17,
+  titleText: {
+    fontSize: 25,
     color: 'rgba(96,100,109, 1)',
     lineHeight: 23,
     textAlign: 'center',
   },
+  getStartedText: {
+    fontSize: 15,
+    color: 'rgba(96,100,109, 1)',
+    lineHeight: 23,
+    textAlign: 'justify',
+  },
   tabBarInfoContainer: {
     position: 'absolute',
-    bottom: 0,
+    top: 0,
     left: 0,
     right: 0,
     ...Platform.select({
