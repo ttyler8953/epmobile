@@ -1,73 +1,90 @@
-import Expo from 'expo';
-import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
-import { NavigationProvider, StackNavigation } from '@expo/ex-navigation';
-import { FontAwesome } from '@expo/vector-icons';
-import DrawerLayout from 'react-native-drawer-layout';
+import Exponent, { Asset, AppLoading } from 'expo';
+import React, { Component } from 'react';
+import { StatusBar } from 'react-native';
+import HomeScreen from './components/HomeScreen';
+import DrawerNavigationScreen from './components/DrawerNavigationScreen';
+import AboutScreen from './components/AboutScreen';
+import HomeHealthTipsScreen from './components/HomeHealthTipsScreen';
+import ContactUsScreen from './components/ContactUsScreen';
+import GalleryScreen from './components/GalleryScreen';
+import RemodelingTipsScreen from './components/RemodelingTipsScreen';
 
-import Router from './navigation/Router';
-import cacheAssetsAsync from './utilities/cacheAssetsAsync';
+import AlertBarsScreen from './components/AlertBarsScreen';
+import TranslucentBarScreen from './components/TranslucentBarScreen';
+import EventEmitterScreen from './components/EventEmitterScreen';
+import CustomNavigationBarScreen
+  from './components/CustomNavigationBarScreen';
 
-class AppContainer extends React.Component {
+import { createRouter, NavigationProvider } from '@expo/ex-navigation';
+
+const assets = [
+  require('./assets/images/Galleries/bath1.jpg'),
+  require('./assets/images/Galleries/bath2.jpg'),
+  require('./assets/images/Galleries/kitchen1.jpg'),
+  require('./assets/images/Galleries/kitchen2.jpg'),
+  require('./assets/images/Galleries/patio1.jpg'),
+  require('./assets/images/Galleries/patio2.jpg'),
+
+];
+
+/**
+  * This is where we map route names to route components. Any React
+  * component can be a route, it only needs to have a static `route`
+  * property defined on it, as in HomeScreen below
+  */
+export const Router = createRouter(() => ({
+  home: () => HomeScreen,
+  about: () => AboutScreen,
+  contactus: () => ContactUsScreen,
+  homehealthtipsscreen: () => HomeHealthTipsScreen,
+  gallery: () => GalleryScreen,
+  remodelingTips: () => RemodelingTipsScreen,
+}));
+
+class App extends Component {
   state = {
-    appIsReady: false,
+    bootstrapped: false,
   };
 
-  componentWillMount() {
-    this._loadAssetsAsync();
+  componentDidMount() {
+    this._bootstrap();
   }
 
-  async _loadAssetsAsync() {
-    try {
-      await cacheAssetsAsync({
-        images: [require('./assets/images/expo-wordmark.png')],
-        fonts: [
-          FontAwesome.font,
-          { 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf') },
-        ],
-      });
-    } catch (e) {
-      console.warn(
-        'There was an error caching assets (see: main.js), perhaps due to a ' +
-          'network timeout, so we skipped caching. Reload the app to try again.'
-      );
-      console.log(e.message);
-    } finally {
-      this.setState({ appIsReady: true });
-    }
-  }
+  _bootstrap = async () => {
+    const promises = assets.map(module =>
+      Asset.fromModule(module).downloadAsync()
+    );
+    await Promise.all(promises);
+    this.setState({
+      bootstrapped: true,
+    });
+  };
 
   render() {
-    if (this.state.appIsReady) {
-      return (
-        <View style={styles.container}>
-          <NavigationProvider router={Router}>
-            <StackNavigation
-              id="root"
-              initialRoute={Router.getRoute('rootNavigation')}
-            />
-          </NavigationProvider>
-
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          {Platform.OS === 'android' &&
-            <View style={styles.statusBarUnderlay} />}
-        </View>
-      );
-    } else {
-      return <Expo.AppLoading />;
+    if (!this.state.bootstrapped) {
+      return <AppLoading />;
     }
+
+    /**
+      * NavigationProvider is only needed at the top level of the app,
+      * similar to react-redux's Provider component. It passes down
+      * navigation objects and functions through context to children.
+      *
+      * StackNavigation represents a single stack of screens, you can
+      * think of a stack like a stack of playing cards, and each time
+      * you add a screen it slides in on top. Stacks can contain
+      * other stacks, for example if you have a tab bar, each of the
+      * tabs has its own individual stack. This is where the playing
+      * card analogy falls apart, but it's still useful when thinking
+      * of individual stacks.
+      */
+    return (
+      <NavigationProvider router={Router}>
+        <StatusBar barStyle="light-content" />
+        <DrawerNavigationScreen />
+      </NavigationProvider>
+    );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  statusBarUnderlay: {
-    height: 24,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-  },
-});
-
-Expo.registerRootComponent(AppContainer);
+Exponent.registerRootComponent(App);

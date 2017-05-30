@@ -1,7 +1,7 @@
 {
   "name": "epmobile",
-  "version": "0.0.0",
-  "description": "Hello Expo!",
+  "version": "1.0.0",
+  "description": "EP Remodeling Mobile App",
   "author": null,
   "main": "main.js",
   "scripts": {
